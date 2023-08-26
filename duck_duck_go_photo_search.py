@@ -1,7 +1,7 @@
 import json
 import requests
 from itertools import islice
-from typing import Type
+from typing import Type, List
 
 from duckduckgo_search import DDGS
 from pydantic import BaseModel, Field
@@ -45,7 +45,7 @@ class DuckDuckGoPhotoSearchTool(BaseTool):
     class Config:
         arbitrary_types_allowed = True
 
-    def _execute(self, query: str, max_photos: int) -> list:
+    def _execute(self, query: str, max_photos: int) -> list[list[bytes]]:
 
         """
         Execute the DuckDuckGo photo search tool.
@@ -119,7 +119,7 @@ class DuckDuckGoPhotoSearchTool(BaseTool):
             while attempts < PHOTO_EXTRACTOR_MAX_ATTEMPTS:
                 response = requests.get(image_link)
                 if response.status_code == 200:
-                    images.append(response.content)
+                    images.append([response.content])
                     break
 
                 attempts += 1

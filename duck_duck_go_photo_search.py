@@ -1,11 +1,12 @@
 import json
 import requests
 from itertools import islice
-from typing import Type, List
+from typing import Type
 
 from duckduckgo_search import DDGS
 from pydantic import BaseModel, Field
 from superagi.tools.base_tool import BaseTool
+import logging
 
 # Const variables
 DUCKDUCKGO_MAX_ATTEMPTS = 3
@@ -57,6 +58,7 @@ class DuckDuckGoPhotoSearchTool(BaseTool):
             Search result photo image bytes.
         """
 
+        logging.info("Executing DuckDuckGoPhotoSearchTool with query: %s, max_photos: %s", query, max_photos)
         photo_links = self.get_duckduckgo_photo_links(query, max_photos)
         return self.download_images(photo_links)
 
@@ -97,6 +99,8 @@ class DuckDuckGoPhotoSearchTool(BaseTool):
 
             attempts += 1
 
+        logging.info("DuckDuckGoPhotoSearchTool found %s photo links.", len(image_links))
+
         return image_links
 
     @staticmethod
@@ -119,7 +123,13 @@ class DuckDuckGoPhotoSearchTool(BaseTool):
             while attempts < PHOTO_EXTRACTOR_MAX_ATTEMPTS:
                 response = requests.get(image_link)
                 if response.status_code == 200:
+                    image_bytes = response.content
+                    logging.info("DuckDuckGoPhotoSearchTool downloaded %s bytes.", len(image_bytes))
                     images.append([response.content])
                     break
 
                 attempts += 1
+
+        logging.info("DuckDuckGoPhotoSearchTool returning image bytes for %s images.", len(images))
+
+        return images

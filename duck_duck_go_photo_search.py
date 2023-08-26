@@ -17,10 +17,10 @@ class DuckDuckGoPhotoSearchSchema(BaseModel):
     query: str = Field(
         ...,
         description="The search query for duckduckgo search.",
-    ),
+    )
     max_photos: int = Field(
         1,
-        description="The maximum number of photos to return."
+        description="The maximum number of photos to return.",
     )
 
 

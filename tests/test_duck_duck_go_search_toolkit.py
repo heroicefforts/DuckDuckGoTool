@@ -1,6 +1,6 @@
 import unittest
 
-from tools.duck_duck_go_search_toolkit import DuckDuckGoToolkit
+from duck_duck_go_search_toolkit import DuckDuckGoToolkit, DuckDuckGoSearchTool, DuckDuckGoPhotoSearchTool
 
 
 class DuckDuckGoSearchToolkitTestCase(unittest.TestCase):
@@ -27,8 +27,9 @@ class DuckDuckGoSearchToolkitTestCase(unittest.TestCase):
         """
 
         tools = self.toolkit.get_tools()
-        self.assertEqual(1, len(tools))
-        self.assertIsInstance(tools[0], DuckDuckGoToolkit)
+        self.assertEqual(2, len(tools))
+        self.assertIsInstance(tools[0], DuckDuckGoSearchTool)
+        self.assertIsInstance(tools[1], DuckDuckGoPhotoSearchTool)
 
     def test_get_env_keys(self):
         """
